@@ -5,3 +5,6 @@ tableofcontents
 preface.md
 mainmatter:
 Chapter01.md
+Chapter04.md
+Chapter05.md
+Chapter06.md
