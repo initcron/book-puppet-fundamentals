@@ -173,15 +173,41 @@ Chapter 10  :  Master Agent - Enterprise Puppet
     - Summary
     - Quiz
 
+Chapter 11 : Testing Puppet Modules
+    - Smoke Test/Dry run with --noop
+    - Syntax Validation
+        - manifests
+        - ruby code
+        - erb templates
+    - Linting code with puppet-lint
+    - Rubocop??
+    - Unit testing with Rspec
+    - Integration test with Test Kitchen
 
-Chapter xx  :  Roles and Profile Design Patterns
-Chapter xx  :  Environments and r10k/ Code Manager
-Chapter xx  :  Hiera
+Chapter 12 : Hiera
+    - Modules without data
+    - How Hiera solves problem of providing data
+    - Creating Hierarchy
+    - Defining Data Sources
+    - Node Classification with Hiera
+    - Hiera in Modules ??
 
+Chapter 13 : Environments and Code Deployments
+    - Creating Multiple Environments
+    - Deploying and Managing Code with r10k
+    - Code Manager, Puppetfiles etc.
+
+
+Chapter 14 : Roles and Profiles Design Patters
+    - Managing Node Definitions
+    - Need for Abstraction
+    - Roles and Profiles Design Patterns
+    - Creating Profiles
+    - Providing abstraction with Roles
+    
 
 Possible Includes ?
 
-hiera, r10k, multi env
 Augeas?
 
 FOR ADVANCED

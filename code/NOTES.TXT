@@ -5,6 +5,14 @@ Chapter 4: modules
     file: /etc/puppetlabs/puppetserver/conf.d/puppetserver.conf
     master-code-dir: /etc/puppetlabs/code
 
+
+Reading List
+  - Node definitions : https://docs.puppet.com/puppet/4.10/lang_node_definitions.html
+
+Quiz
+  - Where should the node definition exist ?
+
+
 LAB : https://gist.github.com/initcron/b3a878b284a30acf7079072eed60f41a
 
 Chapter 5: params
