@@ -1,10 +1,10 @@
 ---
-slug: zero-to-puppet
-filename: zero-to-puppet
-title: Title of the Book
-subtitle: Change me
-description: Change me.
-author: Author Name
+slug: mastering-puppet
+filename: mastering-puppet
+title: Mastering Puppet
+subtitle: Learn puppet, one bite at a time
+description: A comprehensive guide to learn puppet
+author: Gourav Shah
 copyright: 2017
 uuid: 7e2c07fc-cfd4-4fd4-8101-d40f2d728fd6
 pdf_preview_page_range: 1..30

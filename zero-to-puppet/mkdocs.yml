@@ -1,0 +1,12 @@
+site_name: Zero to Chef
+pages:
+  - Home: index.md
+  - Intro: Chapter01.md  
+  - Modules: Chapter04.md  
+  - Templates and Parms: Chapter05.md  
+  - Parameterized Classes: Chapter06.md  
+  - Deploying App: deploy_app.md install.md   
+  - Preface:  preface.md    
+  - Rspec: rspec.md
+docs_dir: chapters
+theme: readthedocs

@@ -5,6 +5,9 @@ tableofcontents
 preface.md
 mainmatter:
 Chapter01.md
+install.md
 Chapter04.md
 Chapter05.md
 Chapter06.md
+deploy_app.md
+rspec.md

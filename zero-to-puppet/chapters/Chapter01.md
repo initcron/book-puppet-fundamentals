@@ -149,7 +149,7 @@ A typical installation of puppet involves  a Puppet Master, which is a centraliz
 
 While puppet offers a centralized management approach, it works unlike most client server schemes. Instead of pushing updates to the nodes from master, its the duty of puppet agent to go the master,  pull changes, and apply. Pull method offers more flexibility and scalability for the following reasons,
 
-* Each node could decide how often or how rare it should update. Some systems need frequent updates, where as others need not be updated for weeks. You could control this frequency.
+* Each node could decide how frequently or infrequently it should update. Some systems need frequent updates, where as others need not be updated for weeks. This could be controlled at  per client level.
 
 * No need to manage inventory and connection details on the master. Nodes could come and go, and could be configured based on dynamic rules to classify them based on certain property e.g. host names, environments, or even hardware addresses.
 
