@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Rspec - Zero to Chef</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Rspec";
+    var mkdocs_page_input_path = "rspec.md";
+    var mkdocs_page_url = "/rspec/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Zero to Chef</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter01/">Intro</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../install/">Puppet Installation using Vagrant</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter04/">Modules</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter05/">Parameters and Facts</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter06/">Templates</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../deploy_app/">Deploying App</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Rspec</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#rspec">Rspec</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#set-the-path">Set the Path</a></li>
+        
+            <li><a class="toctree-l3" href="#install-required-tools">Install Required Tools</a></li>
+        
+            <li><a class="toctree-l3" href="#smoke-testing-rspec-and-rake-on-java-module">Smoke testing rspec and rake on Java module</a></li>
+        
+            <li><a class="toctree-l3" href="#writing-first-unit-test-spec-for-tomcat">Writing first unit test spec for tomcat</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Zero to Chef</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Rspec</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="rspec">Rspec</h1>
+<h4 id="set-the-path">Set the Path</h4>
+<p>The following path need to be set in order to use rake, rspec etc.</p>
+<pre><code>
+export PATH=$PATH:/opt/puppetlabs/puppet/bin/
+
+echo &quot;export PATH=$PATH:/opt/puppetlabs/puppet/bin/&quot; &gt;&gt; ~/.bashrc
+
+source ~/.bashrc
+</code></pre>
+
+<h3 id="install-required-tools">Install Required Tools</h3>
+<pre><code>gem install --no-ri --no-rdoc  puppet-lint puppet-syntax puppetlabs_spec_helper
+cd modules/java
+rspec-puppet-init
+gem install bundler
+bundle install
+</code></pre>
+
+<p><strong>Validate</strong></p>
+<pre><code>rake help
+rspec --help
+</code></pre>
+
+<h3 id="smoke-testing-rspec-and-rake-on-java-module">Smoke testing rspec and rake on Java module</h3>
+<ul>
+<li>Observe Rakefile in modules/java</li>
+<li>Validate and run rspec tests</li>
+</ul>
+<pre><code>rake validate
+
+rake spec
+
+rake test
+
+echo $?
+</code></pre>
+
+<p>metadata may need to be changed to</p>
+<pre><code>{
+  &quot;name&quot;: &quot;gshah-java&quot;,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;author&quot;: &quot;gshah&quot;,
+  &quot;summary&quot;: &quot;this module installs openjdk 7 on RedHat&quot;,
+  &quot;license&quot;: &quot;Apache-2.0&quot;,
+  &quot;source&quot;: &quot;&quot;,
+  &quot;project_page&quot;: null,
+  &quot;issues_url&quot;: null,
+  &quot;dependencies&quot;: [
+    {&quot;name&quot;:&quot;puppetlabs-stdlib&quot;,&quot;version_requirement&quot;:&quot;= 4.17.0&quot;}
+  ],
+  &quot;data_provider&quot;: null
+}
+
+
+</code></pre>
+
+<h2 id="writing-first-unit-test-spec-for-tomcat">Writing first unit test spec for tomcat</h2>
+<p>file: modules/tomcat/.fixtures.yml</p>
+<pre><code>fixtures:
+  symlinks:
+    tomcat: &quot;#{source_dir}&quot;
+    java: &quot;#{source_dir}/../java&quot;
+
+</code></pre>
+
+<p>Smoke Test</p>
+<pre><code>rake validate
+</code></pre>
+
+<p>[fix issues if any until the above command is successful]</p>
+<p>Create a simple unit test for class tomcat (init.pp)</p>
+<p>file: modules/tomcat/specs/classes/init_spec.rb</p>
+<pre><code>require 'spec_helper'
+describe 'tomcat' do
+  context 'with default values for all parameters' do
+    it { should contain_class('tomcat') }
+  end
+
+    it { should contain_class('tomcat::install') }
+    it { should contain_class('tomcat::config') }
+    it { should contain_class('tomcat::service') }
+
+
+end
+</code></pre>
+
+<p>Run Tests</p>
+<pre><code>rake spec
+</code></pre>
+
+<h3 id="creating-specs-for-tomcatconfig">Creating specs for tomcat::config</h3>
+<p>file: specs/classes/config_spec.rb</p>
+<pre><code>require 'spec_helper'
+describe 'tomcat::config' do
+
+  it { should contain_class('tomcat::config') }
+  it { is_expected.to compile }
+  it { is_expected.to contain_file('/etc/tomcat/tomcat.conf').with({
+        :mode    =&gt; '0644',
+        :owner   =&gt; 'tomcat',
+        :group   =&gt; 'tomcat',
+      }).that_notifies('Service[tomcat]')
+
+
+
+  }
+end
+
+</code></pre>
+
+<h4 id="exercise">Exercise</h4>
+<p><strong>Scanario 1</strong>: Create a spec for service class which validates
+  * if tomcat::service is defined
+  * if it contains a service resource with
+    * ensure value as running
+    * enable set to true
+    * requires on Class['tomcat::install']</p>
+<p><strong>Scanario 2</strong>: Create a spec for <strong>base</strong> class which validates
+  * if ::base class is defined
+  * if it contains a service resource for <strong>ntp</strong> with
+    * ensure value as running
+    * enable set to true
+  * Given the osfamily
+    * as RedHat, service class should expect <strong>ntpd</strong> is the service name
+    * as Debian, should expect <strong>ntp</strong> as the service name</p>
+<h3 id="reading-list">Reading List</h3>
+<ul>
+<li>
+<p>Unit Testing with Puppet
+    https://puppet.com/blog/unit-testing-rspec-puppet-for-beginners</p>
+</li>
+<li>
+<p>Next Generation of Puppet Module Testing
+    https://puppet.com/blog/next-generation-of-puppet-module-testing</p>
+</li>
+<li>
+<p>Rspec Matchers for Puppet
+    http://rspec-puppet.com/matchers/</p>
+</li>
+<li>
+<p>Puppet-rspec Tutorial
+    http://rspec-puppet.com/tutorial/</p>
+</li>
+<li>
+<p>Sample Unit Tests with Spec
+    https://github.com/desc/puppet-reprepro/blob/master/spec/classes/init_spec.rb</p>
+</li>
+<li>
+<p>http://terrarum.net/blog/puppet-testing-part-1.html</p>
+</li>
+<li>
+<p>https://wikimatze.de/getting-started-with-rspec-puppet/</p>
+</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../deploy_app/" class="btn btn-neutral" title="Deploying App"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../deploy_app/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

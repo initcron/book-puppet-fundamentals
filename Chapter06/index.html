@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Templates - Zero to Chef</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Templates";
+    var mkdocs_page_input_path = "Chapter06.md";
+    var mkdocs_page_url = "/Chapter06/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Zero to Chef</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter01/">Intro</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../install/">Puppet Installation using Vagrant</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter04/">Modules</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter05/">Parameters and Facts</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Templates</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#templates">Templates</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#converting-tomcatconf-into-a-template">Converting tomcat.conf into a template</a></li>
+        
+            <li><a class="toctree-l3" href="#exercise">Exercise</a></li>
+        
+            <li><a class="toctree-l3" href="#references">References :</a></li>
+        
+            <li><a class="toctree-l3" href="#calling-templates-from-config-class">Calling templates from config class</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../deploy_app/">Deploying App</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../rspec/">Rspec</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Zero to Chef</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Templates</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="templates">Templates</h1>
+<h2 id="converting-tomcatconf-into-a-template">Converting tomcat.conf into a template</h2>
+<p>We always start with the original file (e.g. <code>https://gist.github.com/initcron/01f8554fba3305a1bceee9df5ff0aa24</code>)</p>
+<p>Create file structure to store the templates</p>
+<ul>
+<li>Create a director <strong>modules/manifests/templates</strong></li>
+<li>Create a ERB file for tomcat.conf at  <strong>modules/manifests/templates/tomcat.conf.erb</strong></li>
+<li>Copy over the contents of the original tomcat.conf. You could use the link above as a sample content </li>
+</ul>
+<p>What could go wrong ?</p>
+<ul>
+<li>You may have named <strong>templates</strong> directory as <strong>template</strong> Note the singular vs plural. It should be plural, with <strong>s</strong>.</li>
+<li>There is also a possibility that you have a typo in the name. </li>
+<li>You may have created templates directory at a wrong path. It MUST be at <code>...modules/tomcat/templates</code></li>
+</ul>
+<p>Now lets start converting the file into a template. How do we do that? 
+  * Keep the property names intact.  e.g. JAVA_HOME or TOMCAT_USER
+  * Start replacing the values, with template variables. This is where ERB tags are handy. e.g. </p>
+<p>Original content such as this</p>
+<pre><code>TOMCAT_USER=&quot;tomcat&quot;                                                                                                            
+SHUTDOWN_WAIT=&quot;30&quot;                                                             
+</code></pre>
+
+<p>becomes</p>
+<pre><code>TOMCAT_USER=&quot;&lt;%= @user &gt;&quot;                                                                                                            
+SHUTDOWN_WAIT=&quot;&lt;%= @shutdown_wait &gt;&quot;
+</code></pre>
+
+<ul>
+<li>The template variables which start with @var need to be defined as well. Do that in <strong>tomcat::params</strong>. We already have user defined, lets define the shutdown_wait. What value do we define here?  Well params.pp contains the sane default. So whatever came with the package/configs, and was present in <strong>tomcat.conf</strong> by default is what we use.
+e.g. </li>
+</ul>
+<pre><code>  $shutdown_wait = 30
+
+</code></pre>
+
+<p><strong>TIP</strong> : Its always useful to define the params first in params.pp before replacing the values in the template with ERB tags. That way, you would not have to go figure what were the default values, as once replaces, those values are gone. Its also easir to just copy over the params back as template variables.</p>
+<h2 id="exercise">Exercise</h2>
+<p>Update the following properties in <strong>tomcat.conf</strong> in the template, and define the defaults in <code>params.pp</code></p>
+<ul>
+<li>TOMCAT_CFG_LOADED</li>
+<li>JAVA_HOME</li>
+<li>xms</li>
+<li>xmx</li>
+<li>maxpermsize</li>
+<li>CATALINA_BASE</li>
+<li>JASPER_HOME</li>
+<li>CATALINA_TMPDIR</li>
+<li>SECURITY_MANAGER</li>
+<li>SHUTDOWN_VERBOSE</li>
+<li>CATALINA_PID</li>
+</ul>
+<h2 id="references">References :</h2>
+<ul>
+<li>tomcat.conf.erb   : https://gist.github.com/initcron/71e939a22e018dbc27dd4ae7deb3a55e</li>
+<li>tomcat::params    : https://gist.github.com/initcron/b08de87a1e835852ac00772252a71a97</li>
+</ul>
+<h2 id="calling-templates-from-config-class">Calling templates from config class</h2>
+<p>Creating templates and params does not have an effect on the system unless you start generating the configs using templates. Currently we are using a file resource to generate this file. Lets convert that to using a template. </p>
+<p>In <strong>tomcat::config</strong> class, update property of the file resource from</p>
+<pre><code>source    =&gt; 'puppet:///modules/tomcat/tomcat.conf',
+
+</code></pre>
+
+<p>to</p>
+<pre><code>content  =&gt; template('tomcat/tomcat.conf.erb'),
+
+</code></pre>
+
+<p>Here is the code after making that change for your reference  https://gist.github.com/initcron/87d99703590825716bed515f7e8bf64f</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../deploy_app/" class="btn btn-neutral float-right" title="Deploying App">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../Chapter05/" class="btn btn-neutral" title="Parameters and Facts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../Chapter05/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../deploy_app/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

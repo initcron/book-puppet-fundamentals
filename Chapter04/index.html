@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Modules - Zero to Chef</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Modules";
+    var mkdocs_page_input_path = "Chapter04.md";
+    var mkdocs_page_url = "/Chapter04/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Zero to Chef</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter01/">Intro</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../install/">Puppet Installation using Vagrant</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Modules</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#modules">Modules</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#update-code-dir-to-use-your-current-workspace">Update code dir to use your current workspace</a></li>
+        
+            <li><a class="toctree-l3" href="#generating-modules">Generating Modules</a></li>
+        
+            <li><a class="toctree-l3" href="#writing-classes">Writing classes</a></li>
+        
+            <li><a class="toctree-l3" href="#node-definitions-applying-the-code">Node Definitions - Applying the code</a></li>
+        
+            <li><a class="toctree-l3" href="#nano-project">Nano Project</a></li>
+        
+            <li><a class="toctree-l3" href="#simplify-run-list">Simplify Run List</a></li>
+        
+            <li><a class="toctree-l3" href="#managing-files">Managing Files</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter05/">Parameters and Facts</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../Chapter06/">Templates</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../deploy_app/">Deploying App</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../rspec/">Rspec</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Zero to Chef</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Modules</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="modules">Modules</h1>
+<h2 id="update-code-dir-to-use-your-current-workspace">Update code dir to use your current workspace</h2>
+<p>On puppet master</p>
+<pre><code>puppet
+cp -r /etc/puppetlabs/code /workspace/code    
+</code></pre>
+
+<p>Update config in the server's config  file <strong>/etc/puppetlabs/puppetserver/conf.d/puppetserver.conf</strong> and update </p>
+<pre><code>master-code-dir: /etc/puppetlabs/code
+</code></pre>
+
+<p>to </p>
+<pre><code>master-code-dir: /workspace/code
+</code></pre>
+
+<p>(assuming you are using /workspace as your working/developement directory on the puppet master to store the code at )</p>
+<p>Restart Puppet Server </p>
+<pre><code>shell
+service puppetserver restart  
+</code></pre>
+
+<p>This may take time. </p>
+<h2 id="generating-modules">Generating Modules</h2>
+<p>Change into the directory for production env </p>
+<pre><code>sh
+cd /workspace/code/environments/production/modules
+</code></pre>
+
+<p>Using puppet module command, generate the scaffolding for <strong>java</strong> and <strong>tomcat</strong> modules</p>
+<pre><code>bash
+
+puppet module generate --skip-interview user-java
+
+puppet module generate --skip-interview  gshah-tomcat
+</code></pre>
+
+<h2 id="writing-classes">Writing classes</h2>
+<p>file: <code>modules/java/manifests/init.pp</code></p>
+<pre><code>class java {
+
+  package { [ 'epel-release', 'java-1.7.0-openjdk'] : 
+    ensure =&gt; installed,
+  }
+
+}
+</code></pre>
+
+<h2 id="node-definitions-applying-the-code">Node Definitions - Applying the code</h2>
+<p>To apply the default class from java module, create a node definition </p>
+<p>create file: <code>environments/production/manifests/app.pp</code></p>
+<p>add the node definition </p>
+<pre><code>node 'node1' {
+
+   include java
+
+}
+</code></pre>
+
+<p>To apply, login to <strong>node1</strong> and run puppet agent </p>
+<pre><code>ssh devops@node1
+
+sudo su
+
+puppet agent -t 
+
+</code></pre>
+
+<h3 id="writing-the-class-to-install-tomcat">Writing the class to install tomcat</h3>
+<p>file: <code>modules/tomcat/manifests/install.pp</code></p>
+<pre><code>class tomcat::install {
+
+    include java
+
+    package { [ 'tomcat', 'tomcat-webapps' ]:
+      ensure   =&gt; installed, 
+      require  =&gt; Package['epel-release']
+    }
+
+}
+
+
+</code></pre>
+
+<p>Add <code>tomcat::install</code> to node definition for node1 which should now look like </p>
+<pre><code>node 'node1' {
+
+   include java
+   include tomcat::install
+
+}
+</code></pre>
+
+<p>Apply on node1 by running puppet agent </p>
+<pre><code>[on node1, as root]
+
+puppet agent -t 
+
+</code></pre>
+
+<h2 id="nano-project">Nano Project</h2>
+<p>Now that you have learnt how to write a manifest and apply, and have gone through the class naming conventions, you have been tasked to create  the following classe with the specifications as give below, </p>
+<ul>
+<li>
+<p>class :  tomcat::service 
+      resource : service 
+      name : tomcat 
+      ensure : running 
+      enable : true </p>
+</li>
+<li>
+<p>service resource should have a dependency on install class</p>
+</li>
+<li>
+<p>apply it to node1 by updating the node definition.  Validate by visiting the IP address of the server and port 8081. </p>
+</li>
+</ul>
+<p>Note : Tomcat may take up to 10mins to come up for the first time. This is discussed in details on this page https://wiki.apache.org/tomcat/HowTo/FasterStartUp at the Entropy Source section. We are going to apply that fix in the subsequenct sections. </p>
+<p>Also bootstrap node2 ( configure it to talk to the master), create a node definition identical to node1, and apply. Validate that the tomcat service is started on port 8082. </p>
+<h2 id="simplify-run-list">Simplify Run List</h2>
+<p>file: <code>modules/tomcat/manifests/init.pp</code></p>
+<pre><code>class tomcat {
+
+  include tomcat::install
+  include tomcat::service 
+
+}
+
+</code></pre>
+
+<p>And <code>production/manifests/app.pp</code></p>
+<pre><code>
+node 'node1' {
+
+  include tomcat
+
+}
+
+
+node 'node2' {
+
+   include tomcat
+
+}
+
+</code></pre>
+
+<p><strong>Question</strong> : Why are we not including java anymore? </p>
+<h2 id="managing-files">Managing Files</h2>
+<ul>
+<li>
+<p>Create file </p>
+<ul>
+<li>create directory to hold files : modules/tomcat/files</li>
+<li>create a file modules/tomcat/files/tomcat.conf and add the content from https://gist.github.com/initcron/01f8554fba3305a1bceee9df5ff0aa24</li>
+</ul>
+</li>
+<li>
+<p>Create a class tomcat::config to copy this file to destinition </p>
+</li>
+</ul>
+<p>tomcat::config class </p>
+<pre><code>class tomcat::config {
+
+  file { '/etc/tomcat/tomcat.conf':
+    source    =&gt; 'puppet:///modules/tomcat/tomcat.conf',
+    owner    =&gt; 'tomcat', 
+    group    =&gt; 'tomcat', 
+    mode     =&gt; '0644',
+    notify   =&gt; Service['tomcat'] 
+  }
+
+}
+
+</code></pre>
+
+<p>Call it from tomcat class (init.pp)</p>
+<pre><code>class tomcat {
+
+  include tomcat::install
+  include tomcat::config
+  include tomcat::service 
+}
+</code></pre>
+
+<p>Apply on Node1 and Node2</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Chapter05/" class="btn btn-neutral float-right" title="Parameters and Facts">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../install/" class="btn btn-neutral" title="Puppet Installation using Vagrant"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../install/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Chapter05/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>
