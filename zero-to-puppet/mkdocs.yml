@@ -1,4 +1,4 @@
-site_name: Zero to Chef
+site_name: Zero to Puppet
 pages:
   - Home: index.md
   - Intro: Chapter01.md  
